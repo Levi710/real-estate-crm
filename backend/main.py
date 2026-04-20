@@ -4,12 +4,20 @@ import json
 
 app = FastAPI()
 
+from dotenv import load_dotenv
+import os
+
+
+# connection
 def get_connection():
     return psycopg2.connect(
-        host="127.0.0.1", port=5433,
-        dbname="realestate_crm", user="admin",
-        password="password"
+        os.getenv("DATABASE_URL")
+       #host="127.0.0.1", port=5433,
+       #dbname="realestate_crm", user="admin", password="password"
     )
+load_dotenv()          # load .env file
+conn = get_connection() # create connection
+cur = conn.cursor()     # create cursor
 
 @app.get("/agents")
 def get_agents():
