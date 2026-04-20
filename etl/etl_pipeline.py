@@ -38,6 +38,7 @@ for _, row in df_clients.iterrows():
     cur.execute("""
         INSERT INTO clients (full_name, email, phone, client_type)
         VALUES (%s, %s, %s, %s)
+        ON CONFLICT (email) DO NOTHING
 """, (
     row["full_name"],
     row["email"],
@@ -52,6 +53,8 @@ for _, row in df_properties.iterrows():
     cur.execute("""
         INSERT INTO properties (title,description,property_type,price,area_sqft,city,locality,status)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        ON CONFLICT DO NOTHING
+
 """, (
     row["title"],
     row["description"],
