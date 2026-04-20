@@ -1,0 +1,10 @@
+services:
+  db:
+    image: postgres:15
+    container_name: realestate_crm_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: realestate_crm
+    ports:
+      - "5433:5432"
