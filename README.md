@@ -1,7 +1,11 @@
 # 🏠 Real Estate CRM System
 > End-to-end Data Engineering Capstone Project
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://real-estate-crm-ayushkishor.streamlit.app/)
+
 A complete Real Estate CRM built with PostgreSQL, Python ETL pipeline, Streamlit analytics dashboard, and FastAPI backend.
+
+🔗 **Live Demo** → https://real-estate-crm-ayushkishor.streamlit.app/
 
 ---
 
@@ -33,7 +37,7 @@ This project simulates a real-world real estate business data system — trackin
                         ▼
 ┌─────────────────────────────────────────────────────────┐
 │                  PostgreSQL Database                    │
-│                  (Docker Container)                     │
+│            (Docker locally / Neon on cloud)             │
 │                                                         │
 │  agents │ clients │ properties │ listings │ leads       │
 │              transactions │ interactions                │
@@ -58,13 +62,15 @@ This project simulates a real-world real estate business data system — trackin
 
 | Layer | Technology |
 |---|---|
-| Database | PostgreSQL 15 (Docker) |
+| Database | PostgreSQL 15 (Docker / Neon) |
 | Data Generation | Python, Faker |
 | ETL Pipeline | Python, Pandas, psycopg2 |
 | Analytics | SQL (Window functions, JOINs, Aggregations) |
-| Dashboard | Streamlit |
+| Dashboard | Streamlit, Plotly |
 | Backend API | FastAPI, Uvicorn |
 | Containerization | Docker, Docker Compose |
+| Cloud DB | Neon PostgreSQL |
+| Deployment | Streamlit Cloud |
 
 ---
 
@@ -75,6 +81,7 @@ real-estate-crm/
 │
 ├── docker-compose.yml       # PostgreSQL container config
 ├── schema.sql               # Database schema (7 tables)
+├── requirements.txt         # Python dependencies
 │
 ├── etl/
 │   ├── seed.py              # Fake data generation & insertion
@@ -90,9 +97,12 @@ real-estate-crm/
 ├── backend/
 │   └── main.py              # FastAPI REST API
 │
-└── data/
-    ├── new_clients.csv
-    └── new_properties.csv
+├── data/
+│   ├── new_clients.csv
+│   └── new_properties.csv
+│
+└── docs/
+    └── Real_Estate_CRM_Ayush_Kishor_23053515.pdf
 ```
 
 ---
@@ -116,45 +126,56 @@ properties ──────────────────┐   │   │
 
 ---
 
-## 🚀 How to Run
+## 🚀 How to Run Locally
 
 ### Prerequisites
 - Docker Desktop
 - Python 3.10+
 - pip
 
-### 1. Start PostgreSQL
+### 1. Clone the repo
+```bash
+git clone https://github.com/Levi710/real-estate-crm
+cd real-estate-crm
+```
+
+### 2. Create `.env` file
+```
+DATABASE_URL=postgresql://admin:password@127.0.0.1:5433/realestate_crm
+```
+
+### 3. Start PostgreSQL
 ```bash
 docker compose up -d
 ```
 
-### 2. Install dependencies
+### 4. Install dependencies
 ```bash
-pip install psycopg2-binary pandas faker streamlit fastapi uvicorn
+pip install -r requirements.txt
 ```
 
-### 3. Create schema
+### 5. Create schema
 ```bash
 docker cp schema.sql realestate_crm_db:/schema.sql
 docker exec -it realestate_crm_db psql -U admin -d realestate_crm -f /schema.sql
 ```
 
-### 4. Seed the database
+### 6. Seed the database
 ```bash
 python etl/seed.py
 ```
 
-### 5. Run ETL pipeline
+### 7. Run ETL pipeline
 ```bash
 python etl/etl_pipeline.py
 ```
 
-### 6. Launch dashboard
+### 8. Launch dashboard
 ```bash
 streamlit run dashboard/app.py
 ```
 
-### 7. Launch API
+### 9. Launch API
 ```bash
 uvicorn backend.main:app --reload
 ```
@@ -186,6 +207,8 @@ uvicorn backend.main:app --reload
 
 ## 👤 Author
 
-**Ayush Kishor**  
-B.Tech CSE, KIIT Deemed University (2023–2027)  
+**Ayush Kishor**
+B.Tech CSE, KIIT Deemed University (2023–2027)
 GitHub: [Levi710](https://github.com/Levi710)
+LinkedIn: [ayush-kishor](https://linkedin.com/in/ayush-kishor-b3b5312a6)
+Portfolio: [kishorayush.online](https://kishorayush.online)
