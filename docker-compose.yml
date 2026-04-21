@@ -60,3 +60,15 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  
+  spark:
+    image: jupyter/pyspark-notebook:latest
+    container_name: realestate_spark
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    ports:
+      - "8890:8888"
+      - "4040:4040"
+    volumes:
+      - ./spark:/home/jovyan/work
+    command: start-notebook.sh --NotebookApp.token=''
