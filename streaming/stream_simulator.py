@@ -9,6 +9,7 @@ import psycopg2
 fake = Faker()
 load_dotenv()
 
+
 def get_connection():
     return psycopg2.connect(os.getenv("DATABASE_URL"))
    
