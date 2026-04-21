@@ -8,3 +8,34 @@ services:
       POSTGRES_DB: realestate_crm
     ports:
       - "5433:5432"
+
+  airflow_db:
+    image: postgres:15
+    container_name: realestate_airflow_db
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    ports:
+      - "5434:5432"
+
+  airflow:
+    image: apache/airflow:2.8.0
+    container_name: realestate_airflow
+    depends_on:
+      - airflow_db
+    env_file:
+      - .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_db/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      _PIP_ADDITIONAL_REQUIREMENTS: "faker psycopg2-binary python-dotenv pandas"
+    ports:
+      - "8088:8080"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./etl:/opt/airflow/etl
+      - ./.env:/opt/airflow/.env
+      - ./data:/opt/airflow/data
+    command: standalone

@@ -18,8 +18,8 @@ cur = conn.cursor()
 
 # extract
 
-df_clients = pd.read_csv("data/new_clients.csv")
-df_properties= pd.read_csv("data/new_properties.csv")
+df_clients = pd.read_csv("/opt/airflow/data/new_clients.csv")
+df_properties= pd.read_csv("/opt/airflow/data/new_properties.csv")
 
 print(f"Clients before cleaning: {len(df_clients)}")
 print(f"Properties before cleaning: {len(df_properties)}")
