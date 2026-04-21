@@ -3,7 +3,7 @@
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://real-estate-crm-ayushkishor.streamlit.app/)
 
-A complete Real Estate CRM built with PostgreSQL, Python ETL pipeline, Streamlit analytics dashboard, and FastAPI backend.
+A complete Real Estate CRM built with PostgreSQL, Python ETL pipeline, Streamlit analytics dashboard, FastAPI backend, Apache Airflow, Kafka, PySpark, and streaming simulation.
 
 🔗 **Live Demo** → https://real-estate-crm-ayushkishor.streamlit.app/
 
@@ -11,7 +11,7 @@ A complete Real Estate CRM built with PostgreSQL, Python ETL pipeline, Streamlit
 
 ## 📌 Project Overview
 
-This project simulates a real-world real estate business data system — tracking agents, clients, properties, listings, leads, transactions, and interactions. It covers the full data engineering lifecycle from schema design to analytics and visualization.
+This project simulates a real-world real estate business data system — tracking agents, clients, properties, listings, leads, transactions, and interactions. It covers the full data engineering lifecycle from schema design to analytics, streaming, orchestration, and visualization.
 
 ---
 
@@ -43,17 +43,22 @@ This project simulates a real-world real estate business data system — trackin
 │              transactions │ interactions                │
 └──────────────────┬──────────────────────────────────────┘
                    │
-        ┌──────────┴──────────┐
-        ▼                     ▼
-┌───────────────┐    ┌─────────────────────┐
-│  FastAPI      │    │  Streamlit Dashboard│
-│  backend/     │    │  dashboard/app.py   │
-│  main.py      │    │                     │
-│               │    │  KPI Cards          │
-│  GET /agents  │    │  Agent Rankings     │
-│  GET /props   │    │  Price by City      │
-│  GET /trans   │    │  Lead Conversion    │
-└───────────────┘    └─────────────────────┘
+     ┌─────────────┼─────────────┐
+     ▼             ▼             ▼
+┌──────────┐ ┌──────────┐ ┌───────────────┐
+│ FastAPI  │ │Streamlit │ │    Airflow    │
+│ Backend  │ │Dashboard │ │  Scheduler   │
+└──────────┘ └──────────┘ └───────────────┘
+
+┌─────────────────────────────────────────────────────────┐
+│                  Kafka Pipeline                         │
+│  Producer → topic: properties → Consumer → PostgreSQL  │
+└─────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────┐
+│                  PySpark Jobs                           │
+│  Load CSV → Transform → SQL → Partition → Cache        │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -68,6 +73,10 @@ This project simulates a real-world real estate business data system — trackin
 | Analytics | SQL (Window functions, JOINs, Aggregations) |
 | Dashboard | Streamlit, Plotly |
 | Backend API | FastAPI, Uvicorn |
+| Orchestration | Apache Airflow 2.8 |
+| Streaming | Kafka, Zookeeper, Stream Simulator |
+| Big Data | PySpark 3.5 |
+| Data Quality | Custom validation checks |
 | Containerization | Docker, Docker Compose |
 | Cloud DB | Neon PostgreSQL |
 | Deployment | Streamlit Cloud |
@@ -79,13 +88,14 @@ This project simulates a real-world real estate business data system — trackin
 ```
 real-estate-crm/
 │
-├── docker-compose.yml       # PostgreSQL container config
+├── docker-compose.yml       # All services config
 ├── schema.sql               # Database schema (7 tables)
+├── setup.sh                 # Automated setup script
 ├── requirements.txt         # Python dependencies
 │
 ├── etl/
-│   ├── seed.py              # Fake data generation & insertion
-│   ├── generate_csv.py      # CSV data generator with dirty data
+│   ├── seed.py              # Fake data generation
+│   ├── generate_csv.py      # CSV generator with dirty data
 │   └── etl_pipeline.py      # ETL: Extract → Transform → Load
 │
 ├── analytics/
@@ -97,6 +107,22 @@ real-estate-crm/
 ├── backend/
 │   └── main.py              # FastAPI REST API
 │
+├── dags/
+│   └── etl_dag.py           # Airflow DAG (daily ETL schedule)
+│
+├── kafka/
+│   ├── producer.py          # Kafka property publisher
+│   └── consumer.py          # Kafka consumer → PostgreSQL
+│
+├── streaming/
+│   └── stream_simulator.py  # Real-time property feed simulation
+│
+├── spark/
+│   └── spark_jobs.ipynb     # PySpark jobs (Tasks 14-17)
+│
+├── quality/
+│   └── data_quality.py      # Data validation report
+│
 ├── data/
 │   ├── new_clients.csv
 │   └── new_properties.csv
@@ -107,22 +133,27 @@ real-estate-crm/
 
 ---
 
-## 🗄️ Database Schema
+## ✅ Data Engineering Tasks Covered
 
-7 tables with foreign key relationships:
-
-```
-agents ──────────────────────────────┐
-clients ─────────────────────────┐   │
-properties ──────────────────┐   │   │
-                             │   │   │
-                        listings ────┤
-                             │   │   │
-                          leads ─────┤
-                             │       │
-                      transactions ──┘
-                      interactions
-```
+| Task | Description | Status |
+|---|---|---|
+| Task 1 | Linux + Shell script automation | ✅ |
+| Task 3 | Python CSV processing + cleaning | ✅ |
+| Task 6 | SQL basics (SELECT, WHERE, GROUP BY) | ✅ |
+| Task 7 | Advanced SQL (JOINs, subqueries, window functions) | ✅ |
+| Task 10 | ETL pipeline | ✅ |
+| Task 11 | Batch ingestion from CSV to database | ✅ |
+| Task 14 | Spark basics — process dataset | ✅ |
+| Task 15 | Spark DataFrames — transformations | ✅ |
+| Task 16 | Spark SQL — query large dataset | ✅ |
+| Task 17 | PySpark advanced — partitioning + caching | ✅ |
+| Task 18 | Streaming concepts simulation | ✅ |
+| Task 19 | Kafka basics — producer-consumer | ✅ |
+| Task 20 | Kafka advanced — offset management | ✅ |
+| Task 22 | Airflow DAG for ETL pipeline | ✅ |
+| Task 23 | Airflow scheduling + monitoring | ✅ |
+| Task 29 | Data quality validation checks | ✅ |
+| Task 30 | Final end-to-end pipeline | ✅ |
 
 ---
 
@@ -131,12 +162,13 @@ properties ──────────────────┐   │   │
 ### Prerequisites
 - Docker Desktop
 - Python 3.10+
-- pip
+- Git Bash (for shell script)
 
-### 1. Clone the repo
+### 1. Clone and setup
 ```bash
 git clone https://github.com/Levi710/real-estate-crm
 cd real-estate-crm
+bash setup.sh
 ```
 
 ### 2. Create `.env` file
@@ -144,40 +176,59 @@ cd real-estate-crm
 DATABASE_URL=postgresql://admin:password@127.0.0.1:5433/realestate_crm
 ```
 
-### 3. Start PostgreSQL
+### 3. Start all services
 ```bash
 docker compose up -d
 ```
 
-### 4. Install dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 5. Create schema
+### 4. Create schema + seed data
 ```bash
 docker cp schema.sql realestate_crm_db:/schema.sql
 docker exec -it realestate_crm_db psql -U admin -d realestate_crm -f /schema.sql
-```
-
-### 6. Seed the database
-```bash
 python etl/seed.py
 ```
 
-### 7. Run ETL pipeline
+### 5. Run ETL pipeline
 ```bash
 python etl/etl_pipeline.py
 ```
 
-### 8. Launch dashboard
+### 6. Launch dashboard
 ```bash
 streamlit run dashboard/app.py
 ```
 
-### 9. Launch API
+### 7. Launch API
 ```bash
 uvicorn backend.main:app --reload
+```
+
+### 8. Run Kafka pipeline
+```bash
+# Terminal 1
+python kafka/consumer.py
+# Terminal 2
+python kafka/producer.py
+```
+
+### 9. Run streaming simulation
+```bash
+python streaming/stream_simulator.py
+```
+
+### 10. Run data quality checks
+```bash
+python quality/data_quality.py
+```
+
+### 11. Access Airflow
+```
+http://localhost:8088
+```
+
+### 12. Access Jupyter/PySpark
+```
+http://localhost:8890
 ```
 
 ---
